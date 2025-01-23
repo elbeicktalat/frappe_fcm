@@ -5,6 +5,10 @@ app_description = "FCM push notification server that allows to send a push notif
 app_email = "talatelbeick@gmail.com"
 app_license = "mit"
 
+fixtures = [
+    "Custom Field"
+]
+
 # Apps
 # ------------------
 

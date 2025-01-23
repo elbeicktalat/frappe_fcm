@@ -1,0 +1,179 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-19 00:45:40.958942",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_wdvc",
+  "contact",
+  "token",
+  "title",
+  "body",
+  "image",
+  "sticky",
+  "timestamp",
+  "column_break_amxz",
+  "amended_from",
+  "notification_type",
+  "notification_platform",
+  "priority",
+  "visibility",
+  "color",
+  "icon",
+  "click_action"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_wdvc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "FCM Notification",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "description": "Title of the notification (optional).",
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title"
+  },
+  {
+   "description": "Body of the notification (optional).",
+   "fieldname": "body",
+   "fieldtype": "Small Text",
+   "label": "Body"
+  },
+  {
+   "description": "Image to be displayed in the notification (optional).",
+   "fieldname": "image",
+   "fieldtype": "Attach",
+   "label": "Image"
+  },
+  {
+   "fieldname": "column_break_amxz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.notification_type=='Contact'",
+   "fieldname": "contact",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "To",
+   "mandatory_depends_on": "eval:doc.notification_type=='Contact'",
+   "options": "Contact"
+  },
+  {
+   "fetch_from": "contact.fcm_token",
+   "fieldname": "token",
+   "fieldtype": "Data",
+   "label": "Token",
+   "length": 180,
+   "mandatory_depends_on": "eval:doc.notification_type=='Token'",
+   "read_only_depends_on": "eval:doc.notification_type=='Contact'"
+  },
+  {
+   "fieldname": "timestamp",
+   "fieldtype": "Datetime",
+   "label": "Timestamp",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.notification_type=='Android'",
+   "description": "When set to `False` or unset, the notification is automatically dismissed when the\nuser clicks it in the panel. When set to `True`, the notification persists even when\nthe user clicks it (optional).",
+   "fieldname": "sticky",
+   "fieldtype": "Check",
+   "label": "Sticky"
+  },
+  {
+   "default": "default",
+   "depends_on": "eval:doc.notification_platform=='Android'",
+   "description": "Sets the relative priority for this notification. Low-priority notifications may\nbe hidden from the user in certain situations.",
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "default\nmin\nlow\nhigh\nmax"
+  },
+  {
+   "default": "private",
+   "depends_on": "eval:doc.notification_platform=='Android'",
+   "description": "Sets the visibility of the notification. Must be either `private`, `public`,\nor `secret`. If unspecified, default to `private`.",
+   "fieldname": "visibility",
+   "fieldtype": "Select",
+   "label": "Visibility",
+   "options": "private\npublic\nsecret"
+  },
+  {
+   "depends_on": "eval:doc.notification_platform=='Android'",
+   "description": "Color of the notification icon (optional).",
+   "fieldname": "color",
+   "fieldtype": "Color",
+   "label": "Color",
+   "mandatory_depends_on": "eval:doc.notification_type=='Android'"
+  },
+  {
+   "depends_on": "eval:doc.notification_platform=='Android'",
+   "description": "Icon of the notification (optional).",
+   "fieldname": "icon",
+   "fieldtype": "Data",
+   "label": "Icon"
+  },
+  {
+   "depends_on": "eval:doc.notification_platform=='Android'",
+   "description": "The action associated with a user click on the notification (optional).",
+   "fieldname": "click_action",
+   "fieldtype": "Data",
+   "label": "Click Action"
+  },
+  {
+   "default": "All",
+   "fieldname": "notification_platform",
+   "fieldtype": "Select",
+   "label": "Notification Platform",
+   "options": "All\nAndroid"
+  },
+  {
+   "default": "Contact",
+   "fieldname": "notification_type",
+   "fieldtype": "Select",
+   "label": "Notification Type",
+   "options": "Contact\nToken"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-21 19:50:37.675602",
+ "modified_by": "Administrator",
+ "module": "Frappe FCM",
+ "name": "FCM Notification",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1,
+ "track_seen": 1,
+ "track_views": 1
+}

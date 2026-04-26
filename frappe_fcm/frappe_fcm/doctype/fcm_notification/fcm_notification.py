@@ -1,60 +1,61 @@
 # Copyright (c) 2025, Talat El Beick and contributors
 # For license information, please see license.txt
 
+import json
 import frappe
-import firebase_admin
-
+from frappe import _
 from firebase_admin import messaging
-from firebase_admin import credentials
 from frappe.model.document import Document
 from datetime import datetime
+from frappe_fcm.setup import send_fcm_message
 
 
 class FCMNotification(Document):
-	def	on_submit(self):
-		# This registration token comes from the client FCM SDKs.
-		registration_token = self.token
+    def on_submit(self):
+        # This registration token comes from the client FCM SDKs.
+        registration_token = self.token
 
-		# See documentation on defining a message payload.
-		message = messaging.Message(
-			token=registration_token,
-			notification=messaging.Notification(
-				title=self.title,
-				body=self.body,
-				image=f'{frappe.utils.get_url()}{self.image}' if self.image is not None else None,
-			),
-			android=messaging.AndroidConfig(
-				notification=messaging.AndroidNotification(
-					sticky=True if self.sticky == 1 else False,
-					priority=self.priority,
-					icon=self.icon,
-					color=self.color,
-					click_action=self.click_action,
-				)
-        	) if self.notification_platform == 'Android' else None,
-		)
+        # Handle Data Map (must be a flat dict with string values)
+        data_payload = {}
+        if self.data:
+            try:
+                raw_data = json.loads(self.data) if isinstance(self.data, str) else self.data
+                if isinstance(raw_data, dict):
+                    data_payload = {str(k): str(v) for k, v in raw_data.items()}
+            except (ValueError, TypeError):
+                frappe.throw(_("Invalid Data Map. It must be a valid JSON dictionary."))
 
-		# Send a message to the device corresponding to the provided
-		# registration token.
-		response = messaging.send(message)
-		self.timestamp = datetime.now()
-	
-@frappe.whitelist()
-def	send_to_token(to, title, body, image, sticky, priority, icon, color, click_action):
-	try:
-		doc = frappe.get_doc({
-			'doctype': 'FCM Notification',
-			'token': to,
-			'title': title,
-			'body': body,
-			'image': image,
-			'sticky': sticky,
-			'priority': priority,
-			'icon': icon,
-			'color': color,
-			'click_action': click_action
-		})
+        # Construct AndroidConfig if platform is Android
+        android_config = None
+        if self.notification_platform == 'Android':
+            android_config = messaging.AndroidConfig(
+                notification=messaging.AndroidNotification(
+                    sticky=True if self.sticky == 1 else False,
+                    priority=self.priority,
+                    icon=self.icon,
+                    color=self.color,
+                    click_action=self.click_action,
+                )
+            )
 
-		doc.submit()
-	except Exception as e:
-		raise e
+        # Construct the message
+        message = messaging.Message(
+            token=registration_token,
+            notification=messaging.Notification(
+                title=self.title,
+                body=self.body,
+                image=f'{frappe.utils.get_url()}{self.image}' if self.image else None,
+            ),
+            data=data_payload if data_payload else None,
+            android=android_config,
+        )
+
+        # Send message
+        try:
+            response = send_fcm_message(message)
+            self.timestamp = datetime.now()
+            self.db_set('response', str(response))
+            frappe.msgprint(_("FCM Notification sent successfully: {0}").format(response))
+        except Exception as e:
+            frappe.log_error(frappe.get_traceback(), "FCM Notification Send Error")
+            frappe.throw(_("Failed to send FCM Notification: {0}").format(str(e)))

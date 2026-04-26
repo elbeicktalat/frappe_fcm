@@ -9,15 +9,16 @@
  ],
  "fields": [
   {
+   "description": "Paste the content of your Firebase Service Account JSON file here. You can generate this from Firebase Console > Project Settings > Service Accounts.",
    "fieldname": "credential",
    "fieldtype": "JSON",
-   "label": "Credential"
+   "label": "Firebase Service Account Credentials (JSON)"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-01-21 18:43:54.625182",
+ "modified": "2025-01-21 19:00:00.000000",
  "modified_by": "Administrator",
  "module": "Frappe FCM",
  "name": "FCM Settings",

@@ -38,14 +38,23 @@ class FCMNotification(Document):
                 )
             )
 
-        # Construct the message
-        message = messaging.Message(
-            token=registration_token,
-            notification=messaging.Notification(
+        # No title nor body: a data-only message, handed to the app itself
+        # even in the background (e.g. to ring an alarm) -- sent with high
+        # priority, so Android delivers it to a sleeping phone at once.
+        notification = None
+        if self.title or self.body:
+            notification = messaging.Notification(
                 title=self.title,
                 body=self.body,
                 image=f'{frappe.utils.get_url()}{self.image}' if self.image else None,
-            ),
+            )
+        elif android_config is None:
+            android_config = messaging.AndroidConfig(priority="high")
+
+        # Construct the message
+        message = messaging.Message(
+            token=registration_token,
+            notification=notification,
             data=data_payload if data_payload else None,
             android=android_config,
         )

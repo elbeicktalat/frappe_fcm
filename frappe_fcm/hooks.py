@@ -246,3 +246,9 @@ fixtures = [
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 
+# Notifications no phone confirmed: sent again (frappe_fcm.api).
+scheduler_events = {
+	"cron": {
+		"*/5 * * * *": ["frappe_fcm.api.retry_undelivered"],
+	},
+}

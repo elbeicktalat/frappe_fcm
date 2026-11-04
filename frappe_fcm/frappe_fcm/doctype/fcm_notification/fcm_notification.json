@@ -23,6 +23,7 @@
   "color",
   "icon",
   "click_action",
+  "android_channel_id",
   "response"
  ],
  "fields": [
@@ -140,6 +141,12 @@
    "label": "Click Action"
   },
   {
+   "description": "The app's Android notification channel to show it on (its sound): one the app creates.",
+   "fieldname": "android_channel_id",
+   "fieldtype": "Data",
+   "label": "Android Channel"
+  },
+  {
    "default": "All",
    "fieldname": "notification_platform",
    "fieldtype": "Select",
@@ -162,7 +169,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-21 20:00:00.000000",
+ "modified": "2026-11-04 18:00:00.000000",
  "modified_by": "Administrator",
  "module": "Frappe FCM",
  "name": "FCM Notification",

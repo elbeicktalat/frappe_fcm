@@ -35,7 +35,13 @@ class FCMNotification(Document):
                     icon=self.icon,
                     color=self.color,
                     click_action=self.click_action,
+                    channel_id=self.get('android_channel_id') or None,
                 )
+            )
+        elif self.get('android_channel_id') and (self.title or self.body):
+            # Any platform: on Android, shown on the app's channel -- its sound.
+            android_config = messaging.AndroidConfig(
+                notification=messaging.AndroidNotification(channel_id=self.android_channel_id)
             )
 
         # No title nor body: a data-only message, handed to the app itself

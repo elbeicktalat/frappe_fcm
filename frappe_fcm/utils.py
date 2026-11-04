@@ -16,7 +16,8 @@ def send_notification(
         icon=None,
         color=None,
         click_action=None,
-        notification_platform='All'
+        notification_platform='All',
+        android_channel_id=None,
 ):
     """
     Whitelisted function to create and submit an FCM Notification document.
@@ -48,6 +49,7 @@ def send_notification(
         doc.color = color
         doc.click_action = click_action
         doc.notification_platform = notification_platform
+        doc.android_channel_id = android_channel_id
         doc.token = fcm_token
 
         if contact_name:

@@ -5,8 +5,11 @@ app_description = "FCM push notification server that allows to send a push notif
 app_email = "talatelbeick@gmail.com"
 app_license = "mit"
 
+# Only its own field: unfiltered, export-fixtures dumps every custom field
+# of the site in here (other apps' too, and fields Frappe since made
+# standard -- Email Template's reference_doctype, which then stops migrate).
 fixtures = [
-    "Custom Field"
+    {"dt": "Custom Field", "filters": [["name", "in", ["Contact-fcm_token"]]]},
 ]
 
 # Apps
